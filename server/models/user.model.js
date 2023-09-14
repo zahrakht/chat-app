@@ -24,7 +24,6 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: [true, "Please provide password"],
         min: 8,
-        select: false,
     },
 
     isAvatarSet: {
