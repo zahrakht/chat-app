@@ -49,8 +49,25 @@ const login = async (req, res, next) => {
         next(error);
     }
 };
-
+const setAvatar = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const { image } = req.body;
+        if (!id || !image) {
+            res.json({ isSet: false, msg: "invalid request" });
+            return;
+        }
+        const user = await User.findOneAndUpdate(
+            { id },
+            { isAvatarSet: true, avatarImage: image }
+        );
+        return res.json({ isSet: true, image });
+    } catch (error) {
+        next(error);
+    }
+};
 module.exports = {
     register,
     login,
+    setAvatar,
 };
