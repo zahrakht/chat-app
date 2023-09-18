@@ -57,11 +57,30 @@ const setAvatar = async (req, res, next) => {
             res.json({ isSet: false, msg: "invalid request" });
             return;
         }
-        const user = await User.findOneAndUpdate(
-            { id },
-            { isAvatarSet: true, avatarImage: image }
-        );
+        const user = await User.findByIdAndUpdate(id, {
+            isAvatarSet: true,
+            avatarImage: image,
+        });
         return res.json({ isSet: true, image });
+    } catch (error) {
+        next(error);
+    }
+};
+
+const getUsers = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        if (!id) {
+            res.json({ status: false, msg: "invalid request" });
+            return;
+        }
+        const contacts = await User.find({ _id: { $ne: id } }).select([
+            "email",
+            "username",
+            "_id",
+            "avatarImage",
+        ]);
+        res.json({ status: true, contacts });
     } catch (error) {
         next(error);
     }
@@ -70,4 +89,5 @@ module.exports = {
     register,
     login,
     setAvatar,
+    getUsers,
 };
